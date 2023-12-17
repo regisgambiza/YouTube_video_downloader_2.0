@@ -1,0 +1,152 @@
+/* General Styles */
+QWidget {
+    background-color: #f8f8f8;
+    font-family: Google Sans, Arial, sans-serif;
+    font-size: 12px;
+    color: #4285f4;
+}
+
+QWidget, QDialog, QGroupBox, QLineEdit, QTextEdit, QComboBox, QSpinBox, QCheckBox, QRadioButton {
+    border-radius: 5px;
+    border: 1px solid #e0f2fe;
+}
+
+QMainWindow:active {
+    border: 1px solid #d9d9d9;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: #b2d7ff;
+}
+
+QPushButton:pressed {
+    background-color: #3373cc;
+}
+
+/* Line Edits and Text Edits */
+QLineEdit, QTextEdit {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border: 1px solid #4285f4;
+}
+
+/* Combo Box */
+QComboBox {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 5px;
+}
+
+QComboBox:hover {
+    border: 1px solid #4285f4;
+}
+
+QComboBox:editable {
+    background-color: #eee;
+}
+
+QComboBox::down-arrow {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #4285f4;
+}
+
+QComboBox::down-arrow:hover {
+    background-color: #eee;
+}
+
+/* Spin Box */
+QSpinBox {
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 5px;
+}
+
+QSpinBox:up-button, QSpinBox:down-button {
+    background-color: transparent;
+    border-radius: 3px;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin: 0 2px;
+    color: #4285f4;
+}
+
+QSpinBox:hover:up-button, QSpinBox:hover:down-button {
+    background-color: #eee;
+}
+
+/* Check Box and Radio Button */
+QCheckBox, QRadioButton {
+    spacing: 5px;
+    color: #4285f4;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border: none;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #4285f4;
+}
+
+/* Group Box */
+QGroupBox {
+    border: 1px solid #e0f2fe;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0;
+    margin: 0;
+    color: #4285f4;
+}
+
+/* QTableWidget styles */
+QTableWidget {
+    background-color: #fff;
+    color: #4285f4;
+    border: 1px solid #e0f2fe;
+    border-radius: 5px;
+    gridline-color: #eee;
+    font-size: 11px;
+}
+
+QTableWidget::item {
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+}
+
+QTableWidget::item:selected {
+    background-color: #b2d7ff;
+    
+}
+QLabel {
+    border: none; /* Removed border for QLabel */
+    color: #4285f4;
+}

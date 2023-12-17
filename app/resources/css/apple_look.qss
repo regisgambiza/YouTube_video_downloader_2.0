@@ -1,0 +1,196 @@
+/* General widget styles */
+QWidget {
+    background-color: #222222;
+    color: #cccccc;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    border: none;
+}
+
+/* Rounded corners for all widgets */
+QWidget, QDialog, QGroupBox, QLineEdit, QTextEdit, QComboBox, QSpinBox, QCheckBox, QRadioButton {
+    border-radius: 5px;
+}
+
+/* Active window border */
+QMainWindow:active {
+    border: 1px solid #555555;
+}
+
+/* Button styles */
+QPushButton {
+    background-color: #333333;
+    color: #fff;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: #444444;
+}
+
+QPushButton:pressed {
+    background-color: #555555;
+}
+
+/* Line edit and text edit styles */
+QLineEdit, QTextEdit {
+    background-color: #444444;
+    color: #fff;
+    border: 1px solid #555555;
+    padding: 3px 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border-color: #6699FF;
+}
+
+/* Combo box style */
+QComboBox {
+    background-color: #444444;
+    color: #fff;
+    border: 1px solid #555555;
+    padding: 3px 5px;
+}
+
+QComboBox:hover {
+    border-color: #6699FF;
+}
+
+QComboBox:editable {
+    background-color: #333333;
+}
+
+/* Spin box style */
+QSpinBox {
+    background-color: #444444;
+    color: #fff;
+    border: 1px solid #555555;
+    padding: 3px 5px;
+}
+
+QSpinBox:up-button, QSpinBox:down-button {
+    background-color: #333333;
+    border-radius: 3px;
+    border: none;
+    padding: 2px;
+}
+
+QSpinBox:hover:up-button, QSpinBox:hover:down-button {
+    background-color: #444444;
+}
+
+/* Check box and radio button styles */
+QCheckBox, QRadioButton {
+    spacing: 5px;
+    color: #cccccc;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border: 1px solid #555555;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #6699FF;
+}
+
+/* Group box style */
+QGroupBox {
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0;
+    margin: 0;
+    color: #cccccc;
+}
+/* QTableWidget styles */
+QTableWidget {
+    background-color: #333333;
+    color: #cccccc;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    gridline-color: #444444;
+    font-size: 11px;
+}
+
+QTableWidget::item {
+    border-bottom: 1px solid #444444;
+    padding: 5px;
+}
+
+QTableWidget::item:selected {
+    background-color: #6699FF;
+    color: #fff;
+}
+
+QTableWidget::horizontalHeader {
+    background-color: #444444;
+    color: #cccccc;
+    border-right: 1px solid #555555;
+}
+
+QTableWidget::horizontalHeader::section {
+    padding: 3px 5px;
+    border-right: 1px solid #555555;
+}
+
+QTableWidget::verticalHeader {
+    background-color: #444444;
+    color: #cccccc;
+    border-bottom: 1px solid #555555;
+}
+
+QTableWidget::verticalHeader::section {
+    padding: 3px 5px;
+    border-bottom: 1px solid #555555;
+}
+/* Combo box styles */
+QComboBox {
+    background-color: #444444;
+    color: #fff;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 2px 5px;
+    /* Added styles for improved visibility */
+    qproperty-frame: true; /* Enable standard frame */
+    selection-background-color: #6699FF; /* Highlight selected item */
+    selection-color: #fff; /* Text color for selected item */
+}
+
+QComboBox:hover {
+    border-color: #6699FF;
+}
+
+QComboBox:editable {
+    background-color: #333333;
+}
+
+QComboBox::down-arrow {
+    border-left: 1px solid #555555;
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    background-color: #333333;
+    color: #fff;
+}
+
+QComboBox::down-arrow:hover {
+    background-color: #444444;
+}
+
+/* Fix for dropdown menu background */
+QAbstractItemView {
+    background-color: #333333;
+    color: #fff;
+    border: 1px solid #555555;
+    border-radius: 5px;
+}
