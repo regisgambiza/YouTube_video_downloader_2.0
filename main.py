@@ -1,19 +1,31 @@
 import sys
+import time
 from venv import logger
-from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QPushButton, QWidget, QMessageBox, QTableWidgetItem
+from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QDialog, QWidget, QMessageBox, QTableWidgetItem, QTableWidget, QHeaderView
 from PyQt5.uic import loadUi
 from pytube import YouTube, Playlist
+from download_thread import DownloadThread
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         # Load the main GUI
+        self.download_thread = None
         loadUi('app/ui/main_window_2.0.ui', self)
+        self.progressBar.setValue(0)
+
+        # Customise the table widget
+        self.tableWidget.setShowGrid(False)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setVisible(False)
+
+        self.progressBar.setVisible(False)
 
         # Load the stylesheet
-        # self.stylesheet = "/Users/regisgambiza/PycharmProjects/Youtub_dwnloder/src/app/css/apple_look.qss"
+        # self.stylesheet = "app/resources/css/style.qss"
         try:
             with open(self.stylesheet) as f:
                 style = f.read()
@@ -23,12 +35,20 @@ class MainWindow(QWidget):
         except Exception as e:
             print(f"Error loading stylesheet: {str(e)}")
 
-        # Connect push buttons to functions
-        self.downloadOptionsButton.clicked.connect(self.show_options_dialog)
-        self.addUrlButton.clicked.connect(self.add_url)
+        # Load icons for push buttons
+        self.downloadOptionsButton.setIcon(QIcon('assets/settings-svgrepo-com.svg'))
+        self.addUrlButton.setIcon(QIcon('assets/add-file-svgrepo-com.svg'))
+        self.downloadAllButton.setIcon(QIcon('assets/download.svg'))
+        self.pushButton.setIcon(QIcon("assets/stop-svgrepo-com.svg"))
 
         # Variables
         self.download_queue = []
+
+        # Connect push buttons to functions
+        self.downloadOptionsButton.clicked.connect(self.show_options_dialog)
+        self.addUrlButton.clicked.connect(self.add_url)
+        self.downloadAllButton.clicked.connect(self.download_media)
+
 
     def show_options_dialog(self):
         """Displays the settings dialog"""
@@ -37,7 +57,6 @@ class MainWindow(QWidget):
 
     def add_url(self):
         """Adds a video URL or playlist URL to the download queue."""
-
         url = self.lineEdit.text()
         self.lineEdit.clear()
         if not url:
@@ -50,7 +69,9 @@ class MainWindow(QWidget):
                 playlist = Playlist(url)
                 for video_url in playlist.video_urls:
                     self._add_video(video_url)
+
                     self.display_videos_on_table()
+                    time.sleep(2)
             except Exception as e:
                 logger.error(f"Error adding playlist '{url}': {e}")
         else:
@@ -59,8 +80,6 @@ class MainWindow(QWidget):
                 self.display_videos_on_table()
             except Exception as e:
                 logger.error(f"Error adding video '{url}': {e}")
-
-
 
     def _add_video(self, url: str):
         """Adds a single video to the download queue."""
@@ -78,7 +97,6 @@ class MainWindow(QWidget):
             logger.error(f"Error adding video '{video_title}': {e}")
         print(len(self.download_queue))
 
-
     def get_size_str(self, size_in_bytes):
         for unit in ['B', 'KB', 'MB', 'GB']:
             if size_in_bytes < 1024.0:
@@ -94,15 +112,15 @@ class MainWindow(QWidget):
 
         # Clear existing contents from the table
         table_widget.setRowCount(0)
-        table_widget.setColumnCount(5)  # Assuming you want to display three columns
+        table_widget.setColumnCount(4)  # Assuming you want to display four columns
 
         # Get the current row count to append new rows
         current_row_count = table_widget.rowCount()
 
         # Set the number of columns and column headers if not already set
         if table_widget.columnCount() == 0:
-            table_widget.setColumnCount(5)  # Assuming you want to display three columns
-            table_widget.setHorizontalHeaderLabels(["Video Title", "Status", "Video Size", "Downloaded", "Progress"])
+            table_widget.setColumnCount(4)  # Assuming you want to display four columns
+            table_widget.setHorizontalHeaderLabels(["Video Title", "Status", "Video Size", "Progress"])
 
         # Populate the table with YouTubeVideo objects
         for row, video in enumerate(self.download_queue, start=current_row_count):
@@ -111,16 +129,62 @@ class MainWindow(QWidget):
             table_widget.setItem(row, 1, QTableWidgetItem("Queued"))
             table_widget.setItem(row, 2, QTableWidgetItem(video.video_size))
             table_widget.setItem(row, 3, QTableWidgetItem("---"))
-            table_widget.setItem(row, 4, QTableWidgetItem("---"))
+            self.align_text_for_table_widget()
+
+    def update_progress(self, progress, status):
+        # Update cell content
+        print(f"Percentage:{progress}")
+        self.progressBar.setVisible(True)
+        self.progressBar.setValue(progress)
+        self.tableWidget.setItem(0, 3, QTableWidgetItem(str(progress) + "%"))
+        self.tableWidget.setItem(0, 1, QTableWidgetItem(status))
+        self.align_text_for_table_widget()
+
+
+    def align_text_for_table_widget(self):
+        for i in range(self.tableWidget.rowCount()):
+            self.tableWidget.item(i, 1).setTextAlignment(Qt.AlignCenter)
+            self.tableWidget.item(i, 2).setTextAlignment(Qt.AlignCenter)
+            self.tableWidget.item(i, 3).setTextAlignment(Qt.AlignCenter)
+
+    def download_media(self):
+        if not self.download_queue:
+            return  # No videos in the queue
+        self.downloadAllButton.setEnabled(False)
+
+        video = self.download_queue[0]
+        url = video.video_url
+
+        # Start a new thread for the current video
+        self.download_thread = DownloadThread(url)
+        self.download_thread.progress_changed.connect(self.update_progress)
+
+        # Connect the finished signal to the download_next_video method
+        self.download_thread.finished.connect(self.download_next_video)
+
+        # Start the thread
+        self.download_thread.start()
+
+    def download_next_video(self):
+        # Disconnect the finished signal to avoid calling download_next_video multiple times
+        self.download_thread.finished.disconnect(self.download_next_video)
+
+        # Remove video from first position
+        self.download_queue.pop(0)
+        self.display_videos_on_table()
+
+        # Check if there are more videos in the queue
+        if self.download_queue:
+            # Download the next video after a short delay to allow the thread to finish
+            QTimer.singleShot(100, self.download_media)
+        self.downloadAllButton.setEnabled(True)
 
 
 class YouTubeVideo:
-    def __init__(self, video_url, video_title, video_size):
+    def __init__(self, video_url, _video_title, video_size):
         self.video_url = video_url
-        self.video_title = video_title
+        self.video_title = _video_title
         self.video_size = video_size
-
-    # Define additional methods as needed
 
     def __str__(self):
         return f"YouTube video: {self.video_title} ({self.video_size} bytes)"
@@ -139,25 +203,6 @@ class DownloadOptionsDialog(QDialog):
             print("Stylesheet file not found")
         except Exception as e:
             print(f"Error loading stylesheet: {str(e)}")
-
-
-class DownloadThread(QThread):
-    """ Worker thread for handling video and playlist downloads."""
-    progress_signal = pyqtSignal(int, str, str)
-    completion_signal = pyqtSignal(str)
-    stop_signal = pyqtSignal()
-
-    def __init__(self, url):
-        super().__init__()
-        self.url = url
-
-    def run(self):
-        self.download_video()
-
-    def download_video(self):
-        yt = YouTube(self.url, on_progress_callback=self.on_progress)
-        video_streams = yt.streams.filter(file_extension="mp4")
-        selected_video_stream = video_streams.get_highest_resolution()
 
 
 if __name__ == "__main__":

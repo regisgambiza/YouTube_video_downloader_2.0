@@ -38,7 +38,7 @@
      <item>
       <widget class="QLabel" name="urlLabel">
        <property name="text">
-        <string>Enter YouTube video URLs:</string>
+        <string>Enter YouTube Video/Playlist URL:</string>
        </property>
       </widget>
      </item>
@@ -48,7 +48,7 @@
      <item>
       <widget class="QPushButton" name="addUrlButton">
        <property name="text">
-        <string>Add URL</string>
+        <string>Add</string>
        </property>
       </widget>
      </item>
@@ -80,29 +80,31 @@
      </column>
      <column>
       <property name="text">
-       <string>Downloaded</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
        <string>Progress</string>
       </property>
      </column>
     </widget>
    </item>
    <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="optionsLayout">
      <item>
-      <widget class="QPushButton" name="downloadOptionsButton">
+      <widget class="QPushButton" name="downloadAllButton">
        <property name="text">
-        <string>Download Options</string>
+        <string>Download</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="downloadAllButton">
+      <widget class="QPushButton" name="pushButton">
        <property name="text">
-        <string>Download All</string>
+        <string>Stop</string>
        </property>
       </widget>
      </item>
@@ -118,6 +120,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="downloadOptionsButton">
+       <property name="text">
+        <string>Settings</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

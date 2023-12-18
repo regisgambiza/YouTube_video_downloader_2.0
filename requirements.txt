@@ -1,2 +1,19 @@
-PyQt5
-requests
+    def download_media(self):
+        for video in self.download_queue:
+            url = video.video_url
+            self.download_thread = DownloadThread(url)
+            self.download_thread.progress_changed.connect(self.update_progress)
+            self.download_thread.finished.connect(self.thread_finished)
+            self.download_thread.start()
+            self.download_thread.wait(1)
+
+    def thread_finished(self):
+        # This slot is called when the thread finishes
+        print("Hello")
+        if self.download_thread.isRunning():
+            self.download_thread.terminate()  # Terminate the thread if it's still running
+
+        if self.download_queue:
+            # Remove video from the first position
+            self.download_queue.pop(0)
+            self.display_videos_on_table()
