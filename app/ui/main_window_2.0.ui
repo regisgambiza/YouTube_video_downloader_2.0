@@ -48,7 +48,7 @@
      <item>
       <widget class="QPushButton" name="addUrlButton">
        <property name="text">
-        <string>Add</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -97,14 +97,14 @@
      <item>
       <widget class="QPushButton" name="downloadAllButton">
        <property name="text">
-        <string>Download</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton">
        <property name="text">
-        <string>Stop</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -124,7 +124,7 @@
      <item>
       <widget class="QPushButton" name="downloadOptionsButton">
        <property name="text">
-        <string>Settings</string>
+        <string/>
        </property>
       </widget>
      </item>

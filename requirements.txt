@@ -1,19 +1,11 @@
-    def download_media(self):
-        for video in self.download_queue:
-            url = video.video_url
-            self.download_thread = DownloadThread(url)
-            self.download_thread.progress_changed.connect(self.update_progress)
-            self.download_thread.finished.connect(self.thread_finished)
-            self.download_thread.start()
-            self.download_thread.wait(1)
+Event Title,Start Date,Start Time,End Date,End Time,Description,Location
 
-    def thread_finished(self):
-        # This slot is called when the thread finishes
-        print("Hello")
-        if self.download_thread.isRunning():
-            self.download_thread.terminate()  # Terminate the thread if it's still running
-
-        if self.download_queue:
-            # Remove video from the first position
-            self.download_queue.pop(0)
-            self.display_videos_on_table()
+,"2023-12-19",06:00,"2023-12-19",12:00,"Intensive Revision for Theory in Computing Exam","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",12:00,"2023-12-19",13:00,"Lunch and Break","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",13:00,"2023-12-19",14:00,"Exercise (Skipping Rope)","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",14:00,"2023-12-19",15:00,"Programming Projects","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",15:00,"2023-12-19",16:00,"Job Applications","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",16:00,"2023-12-19",18:00,"Dinner and Free Time","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",18:00,"2023-12-19",20:00,"Intensive Revision for Theory in Computing Exam","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",20:00,"2023-12-19",21:00,"Programming Projects","Standerton, Mpumalanga, South Africa"
+,"2023-12-19",21:00,"2023-12-19",22:00,"Sleep Preparation","Standerton, Mpumalanga, South Africa"

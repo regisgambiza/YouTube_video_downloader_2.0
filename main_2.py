@@ -7,25 +7,29 @@ from PyQt5.QtWidgets import QApplication, QDialog, QWidget, QMessageBox, QTableW
 from PyQt5.uic import loadUi
 from pytube import YouTube, Playlist
 from download_thread import DownloadThread
+from add_url_thread import AddUrlThread
 
 
 class MainWindow(QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
+        
         # Load the main GUI
-        self.download_thread = None
         loadUi('app/ui/main_window_2.0.ui', self)
+
+        # Initialising
+        self.download_thread = None
+        self.download_queue = []
         self.progressBar.setValue(0)
+        self.progressBar.setVisible(False)
 
         # Customise the table widget
         self.tableWidget.setShowGrid(False)
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.tableWidget.verticalHeader().setVisible(False)
 
-        self.progressBar.setVisible(False)
-
         # Load the stylesheet
-        # self.stylesheet = "app/resources/css/style.qss"
+        self.stylesheet = "app/resources/css/style.qss"
         try:
             with open(self.stylesheet) as f:
                 style = f.read()
@@ -41,14 +45,10 @@ class MainWindow(QWidget):
         self.downloadAllButton.setIcon(QIcon('assets/download.svg'))
         self.pushButton.setIcon(QIcon("assets/stop-svgrepo-com.svg"))
 
-        # Variables
-        self.download_queue = []
-
         # Connect push buttons to functions
         self.downloadOptionsButton.clicked.connect(self.show_options_dialog)
         self.addUrlButton.clicked.connect(self.add_url)
         self.downloadAllButton.clicked.connect(self.download_media)
-
 
     def show_options_dialog(self):
         """Displays the settings dialog"""
@@ -64,21 +64,40 @@ class MainWindow(QWidget):
             return
 
         if "playlist" in url.lower():
-            QMessageBox.warning(self, "Warning", "Please wait while videos are added to the download queue!")
-            try:
-                playlist = Playlist(url)
-                for video_url in playlist.video_urls:
-                    self._add_video(video_url)
-                    self.display_videos_on_table()
-                    time.sleep(2)
-            except Exception as e:
-                logger.error(f"Error adding playlist '{url}': {e}")
+            QMessageBox.warning(self, "Warning", "Your link has multiple videos! Be patient while videos are added to the download queue!")
+            playlist = Playlist(url)
+            url_list = playlist.video_urls
         else:
-            try:
-                self._add_video(url)
-                self.display_videos_on_table()
-            except Exception as e:
-                logger.error(f"Error adding video '{url}': {e}")
+            url_list = [url]
+
+        # Start a separate thread to add URLs to the download queue
+        self.add_url_thread = AddUrlThread(url_list)
+        self.add_url_thread.progress_signal.connect(self.handle_add_url_progress)
+        self.add_url_thread.finished.connect(self.cleanup_add_url_thread)
+        self.add_url_thread.start()
+
+    def handle_add_url_progress(self, new_video):
+        """Handle progress signals emitted by the AddUrlThread."""
+        if new_video:
+            self.download_queue.append(new_video)
+            self.add_video_to_table_widget(new_video)
+    
+    def add_video_to_table_widget(self, video):
+        """Add a single video to the table."""
+        table_widget = self.tableWidget
+        current_row_count = table_widget.rowCount()
+        table_widget.insertRow(current_row_count)
+        table_widget.setItem(current_row_count, 0, QTableWidgetItem(video.video_title))
+        table_widget.setItem(current_row_count, 1, QTableWidgetItem("Queued"))
+        table_widget.setItem(current_row_count, 2, QTableWidgetItem(video.video_size))
+        table_widget.setItem(current_row_count, 3, QTableWidgetItem("---"))
+        self.align_text_for_table_widget()
+
+    def cleanup_add_url_thread(self):
+        """Clean up the AddUrlThread."""
+        self.add_url_thread.progress_signal.disconnect(self.handle_add_url_progress)
+        self.add_url_thread.finished.disconnect(self.cleanup_add_url_thread)
+        self.add_url_thread.deleteLater()
 
     def _add_video(self, url: str):
         """Adds a single video to the download queue."""
@@ -139,7 +158,6 @@ class MainWindow(QWidget):
         self.tableWidget.setItem(0, 1, QTableWidgetItem(status))
         self.align_text_for_table_widget()
 
-
     def align_text_for_table_widget(self):
         for i in range(self.tableWidget.rowCount()):
             self.tableWidget.item(i, 1).setTextAlignment(Qt.AlignCenter)
@@ -178,7 +196,6 @@ class MainWindow(QWidget):
             QTimer.singleShot(100, self.download_media)
         self.downloadAllButton.setEnabled(True)
 
-
 class YouTubeVideo:
     def __init__(self, video_url, _video_title, video_size):
         self.video_url = video_url
@@ -187,7 +204,6 @@ class YouTubeVideo:
 
     def __str__(self):
         return f"YouTube video: {self.video_title} ({self.video_size} bytes)"
-
 
 class DownloadOptionsDialog(QDialog):
     def __init__(self, parent=None):
@@ -202,7 +218,6 @@ class DownloadOptionsDialog(QDialog):
             print("Stylesheet file not found")
         except Exception as e:
             print(f"Error loading stylesheet: {str(e)}")
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
