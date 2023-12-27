@@ -1,0 +1,54 @@
+/* Set the background color of the entire application to white */
+QWidget {
+    background-color: white;
+}
+
+/* Style the main window title bar */
+QMainWindow::title {
+    background-color: black;
+    color: white;
+    padding: 6px;
+}
+
+/* Style the push buttons */
+QPushButton {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* Change push button color on hover */
+QPushButton:hover {
+    background-color: #333333; /* Darker shade on hover */
+}
+
+/* Style the line edit (text input) */
+QLineEdit {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+/* Style the progress bar */
+QProgressBar {
+    border: 1px solid black;
+    height: 15px;
+    text-align: center;
+}
+
+/* Style the chunk of the progress bar */
+QProgressBar::chunk {
+    background-color: #3498db; /* Blue color for progress chunk */
+    border-radius: 5px;
+}
+
+/* Animation for the progress bar chunk */
+QProgressBar::chunk:indeterminate {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                      stop:0 rgba(255, 255, 255, 0),
+                                      stop:0.4 rgba(255, 255, 255, 255),
+                                      stop:0.6 rgba(255, 255, 255, 255),
+                                      stop:1 rgba(255, 255, 255, 0));
+    width: 2px; /* Adjust the width of the animated chunk */
+}

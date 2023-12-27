@@ -1,7 +1,6 @@
 from PyQt5.QtCore import pyqtSignal, QThread
 from pytube import YouTube
 
-
 class DownloadThread(QThread):
     progress_changed = pyqtSignal(int, str)
     finished = pyqtSignal(str, bool)
