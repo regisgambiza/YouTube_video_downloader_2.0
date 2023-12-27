@@ -10,15 +10,9 @@ The **YouTube Video Downloader app** is a simple desktop application built in Py
 
 ## Features
 
-- **Download Single Videos:** Enter the URL of a YouTube video, and the app will download it for you.
-  
-- **Download Playlists:** Paste the URL of a YouTube playlist, and the app will prompt you for confirmation before downloading the entire playlist.
-
-- **User-friendly Interface:** The app provides a clean and intuitive user interface, making it easy for users to interact with and initiate downloads.
-
-- **Real-time Progress Updates:** Track the progress of your downloads with real-time updates on the application window. The progress bar shows the completion percentage, and the text browser provides additional information, including the video name and download size.
-
-- **Error Handling:** The application gracefully handles errors during the download process, providing informative messages to the user in case of issues.
+- Download YouTube videos and playlists.
+- Multiple simultaneous downloads.
+- Customizable video quality settings.
 
 ## Prerequisites
 
@@ -28,5 +22,14 @@ Before running the application, ensure you have the following installed:
 - **PyQt5 library**
 - **Pytube library**
 
+## Technologies Used
+
+- **Python**: Programming language used for the main application logic.
+- **PyQt5**: GUI framework for creating the application's user interface.
+- **PyTube**: Library for downloading YouTube videos.
+- **QThread**: PyQt5 module for handling concurrent operations in a separate thread.
+- **QTimer**: PyQt5 module for triggering events at specified intervals.
+- **YouTube API**: Used indirectly through the PyTube library to fetch video details.
+- **Git**: Version control system used for project collaboration and tracking changes.
 
 
