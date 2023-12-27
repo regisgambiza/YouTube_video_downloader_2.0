@@ -1,4 +1,8 @@
 # YouTube Video Downloader App
+![Screenshot 2023-12-27 at 16 24 26](https://github.com/regisgambiza/YouTube_video_downloader_2.0/assets/36857562/9c51c2df-7f11-4c4b-94c1-cedd6b2b9538)
+
+![Screenshot 2023-12-27 at 16 25 00](https://github.com/regisgambiza/YouTube_video_downloader_2.0/assets/36857562/22fe9935-5668-4905-8c03-86a9fcc24a17)
+
 
 ## Overview
 
